@@ -73,7 +73,7 @@ const _applySet = (context, address, name, value) => (possibleAddressValues) => 
     stateValue = {}
   }
 
-  stateValue[name] = value
+  stateValue[name] = {value,date: (new Date().toDateString())}
 
   return _setEntry(context, address, stateValue)
 }
