@@ -111,7 +111,12 @@ const _applyOperator = (verb, op) => (context, address, name, value) => (possibl
 
 const _applyInc = _applyOperator('inc', (x, y) => x + y)
 const _applyDec = _applyOperator('dec', (x, y) => x - y)
-
+//Trying to apply the transfer function
+//const _applyTransfer =_applyOperator('transfer', (x, _y, z) => x-z, _y+z)
+function _applyTransfer(sender, reciever, amount) {
+        _applyDec(sender, value);
+        _applyInc(reciever, value);
+}
 class IntegerKeyHandler extends TransactionHandler {
   constructor () {
     super(INT_KEY_FAMILY, ['1.0'], [INT_KEY_NAMESPACE])
@@ -154,7 +159,7 @@ class IntegerKeyHandler extends TransactionHandler {
 
         value = parsed
 
-        // Determine the action to apply based on the verb
+        // Determine the action to apply based on the verb. Update: Adding a verb for transfer
         let actionFn
         if (verb === 'set') {
           actionFn = _applySet
@@ -162,8 +167,10 @@ class IntegerKeyHandler extends TransactionHandler {
           actionFn = _applyDec
         } else if (verb === 'inc') {
           actionFn = _applyInc
+        } else if (verb === 'transfer') {
+          actionFn = _applyTransfer
         } else {
-          throw new InvalidTransaction(`Verb must be set, inc, dec not ${verb}`)
+          throw new InvalidTransaction(`Verb must be set, inc, dec, transfer not ${verb}`)
         }
 
         let address = INT_KEY_NAMESPACE + _hash(name).slice(-64)
